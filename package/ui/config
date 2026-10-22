@@ -1,11 +1,14 @@
 {
   ".url": {
     "com.studioalbum.console": {
-      "type": "url",
+      "type": "legacy",
+      "appWindow": "com.studioalbum.console",
       "title": "Studio Album Console",
-      "desc": "Studio Album administration: shared folders, owner account, cache",
+      "desc": "Studio Album administration: shared folders, owner account, cache, updates",
       "icon": "images/console_{0}.png",
       "url": "/webman/3rdparty/StudioAlbum/console/console-dsm.html",
+      "width": 1100,
+      "height": 720,
       "allUsers": false,
       "grantPrivilege": "local",
       "advanceGrantPrivilege": true
