@@ -1,0 +1,9 @@
+* text=auto
+*.sh text eol=lf
+package/scripts/* text eol=lf
+package/ui/api.cgi text eol=lf
+package/ui/config text eol=lf
+package/INFO.tmpl text eol=lf
+*.png binary
+*.PNG binary
+*.jpg binary

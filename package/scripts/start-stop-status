@@ -1,0 +1,48 @@
+#!/bin/sh
+# Studio Album service control (DSM 7, runs as the package user).
+PKG="StudioAlbum"
+BIN="/var/packages/${PKG}/target/bin/studioalbum"
+VAR="${SYNOPKG_PKGVAR:-/var/packages/${PKG}/var}"
+PID="${VAR}/studioalbum.pid"
+LOG="${VAR}/studioalbum.log"
+PORT=8686
+
+is_running() {
+    [ -f "$PID" ] && kill -0 "$(cat "$PID")" 2>/dev/null
+}
+
+case "$1" in
+    start)
+        is_running && exit 0
+        # keep the log small: rotate at 5 MB
+        if [ -f "$LOG" ] && [ "$(wc -c < "$LOG")" -gt 5242880 ]; then
+            mv -f "$LOG" "${LOG}.1"
+        fi
+        "$BIN" serve -data "$VAR" -port "$PORT" < /dev/null >> "$LOG" 2>&1 &
+        echo $! > "$PID"
+        sleep 1
+        is_running || exit 1
+        exit 0
+        ;;
+    stop)
+        if is_running; then
+            kill "$(cat "$PID")"
+            i=0
+            while is_running && [ $i -lt 10 ]; do sleep 1; i=$((i + 1)); done
+            is_running && kill -9 "$(cat "$PID")"
+        fi
+        rm -f "$PID"
+        exit 0
+        ;;
+    status)
+        is_running && exit 0
+        exit 3
+        ;;
+    log)
+        echo "$LOG"
+        exit 0
+        ;;
+    *)
+        exit 1
+        ;;
+esac

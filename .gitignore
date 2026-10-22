@@ -1,0 +1,8 @@
+node_modules/
+dist/
+backend/web/
+package/ui/console/
+testdata/data/
+testdata/*.exe
+testdata/server.log
+testdata/shares/

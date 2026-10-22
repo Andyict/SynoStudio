@@ -1,0 +1,26 @@
+{
+  ".url": {
+    "com.studioalbum.console": {
+      "type": "url",
+      "title": "Studio Album Console",
+      "desc": "Studio Album administration: shared folders, owner account, cache",
+      "icon": "images/console_{0}.png",
+      "url": "/webman/3rdparty/StudioAlbum/console/console-dsm.html",
+      "allUsers": false,
+      "grantPrivilege": "local",
+      "advanceGrantPrivilege": true
+    },
+    "com.studioalbum.app": {
+      "type": "url",
+      "title": "Studio Album",
+      "desc": "Albums, customers and photo selections",
+      "icon": "images/app_{0}.png",
+      "protocol": "http",
+      "port": "8686",
+      "url": "/studio/",
+      "allUsers": true,
+      "grantPrivilege": "all",
+      "advanceGrantPrivilege": true
+    }
+  }
+}
