@@ -401,7 +401,7 @@ func dsmLogin(user, pass, otp string) error {
 	}
 	cl := &http.Client{Timeout: 10 * time.Second, Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}}
 	var lastErr error
-	for _, base := range []string{"http://127.0.0.1:5000", "https://127.0.0.1:5001"} {
+	for _, base := range dsmBaseURLs() {
 		resp, err := cl.PostForm(base+"/webapi/entry.cgi", form)
 		if err != nil {
 			lastErr = err
@@ -433,4 +433,30 @@ func dsmLogin(user, pass, otp string) error {
 		}
 	}
 	return fmt.Errorf("Không kết nối được DSM: %v", lastErr)
+}
+
+// dsmBaseURLs returns the local DSM web addresses, using the ports configured in DSM
+// (Control Panel → Login Portal) instead of assuming 5000/5001.
+func dsmBaseURLs() []string {
+	httpPort, httpsPort := "5000", "5001"
+	if b, err := os.ReadFile("/etc/synoinfo.conf"); err == nil {
+		for _, line := range strings.Split(string(b), "\n") {
+			k, v, ok := strings.Cut(strings.TrimSpace(line), "=")
+			if !ok {
+				continue
+			}
+			v = strings.Trim(v, `"`)
+			switch k {
+			case "admin_port":
+				if v != "" {
+					httpPort = v
+				}
+			case "secure_admin_port":
+				if v != "" {
+					httpsPort = v
+				}
+			}
+		}
+	}
+	return []string{"http://127.0.0.1:" + httpPort, "https://127.0.0.1:" + httpsPort}
 }
